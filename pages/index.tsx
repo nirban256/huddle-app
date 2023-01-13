@@ -1,11 +1,15 @@
 import type { NextPage } from "next"
 import { useAppStateContext } from "../context/contextProvider";
-
+import { usePeersData } from "@huddle01/huddle01-client/hooks";
+import { useEffect, useState } from "react"
 
 
 const Home: NextPage = () => {
     //@ts-ignore
     const { huddleClient } = useAppStateContext()
+    const [peersState, setPeersState] = useState<any>([])
+
+    const peers = usePeersData();
 
     const joinCall = async (roomId: string, address: string, ens: string) => {
         await huddleClient.join(roomId, // roomId
@@ -24,6 +28,18 @@ const Home: NextPage = () => {
         await huddleClient.muteMic()
     }
 
+    const allowAll = async () => {
+        huddleClient.allowAllLobbyPeersToJoinRoom();
+    }
+
+    useEffect(() => {
+        // setPeersState(peers)
+        // if (peers.length > 0) {
+        //     console.log("peers => ", peers)
+        // }
+        console.log(peers)
+    }, [peers])
+
 
     return <div className="flex flex-col gap-5">
 
@@ -36,6 +52,12 @@ const Home: NextPage = () => {
         <button onClick={muteMic} className="bg-white rounded text-black w-40 h-20">
             Mute Mic
         </button>
+
+        <button onClick={allowAll} className="bg-white rounded text-black w-40 h-20">
+            Allow Call
+        </button>
+
+
     </div>
 }
 
